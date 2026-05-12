@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Providence Spots</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Georgia', serif; }
+    #map { height: 100dvh; }
+
+    /* popup wrapper */
+    .leaflet-popup-content-wrapper {
+      background: #0d0d0d;
+      color: #f0ede6;
+      border-radius: 2px;
+      box-shadow: none;
+      border: 1px solid #333;
+      padding: 0;
+    }
+
+    /* popup tip/arrow */
+    .leaflet-popup-tip {
+      background: #0d0d0d;
+    }
+
+    /* popup inner content */
+    .leaflet-popup-content {
+      margin: 0;
+      padding: 14px 18px;
+      font-size: 13px;
+      line-height: 1.7;
+      min-width: 180px;
+    }
+
+    .leaflet-popup-content .spot-name {
+      font-size: 15px;
+      font-weight: bold;
+      letter-spacing: 0.02em;
+      margin-bottom: 4px;
+      color: #e8d9b0;
+    }
+
+    .leaflet-popup-content .spot-note {
+      color: #999;
+      font-style: italic;
+      font-size: 12px;
+    }
+
+    /* close button */
+    .leaflet-popup-close-button {
+      color: #555 !important;
+      font-size: 18px !important;
+      top: 6px !important;
+      right: 8px !important;
+    }
+    .leaflet-popup-close-button:hover {
+      color: #f0ede6 !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    var map = L.map('map').setView([41.8265, -71.4023], 15);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    function makePopup(name, note) {
+      return `<div class="spot-name">${name}</div><div class="spot-note">${note}</div>`;
+    }
+
+    // markers
+    var spots = [
+      { lat: 41.8265, lng: -71.4023, name: "RISD Main Building", note: "the mothership" },
+      { lat: 41.8245, lng: -71.4090, name: "AS220", note: "open studio / shows / food" },
+      { lat: 41.8280, lng: -71.4000, name: "RISD Museum", note: "free with student ID" },
+      { lat: 41.8255, lng: -71.4055, name: "Cable Car Cinema", note: "best theater in pvd" },
+    ];
+
+    spots.forEach(function(s) {
+      L.marker([s.lat, s.lng])
+        .addTo(map)
+        .bindPopup(makePopup(s.name, s.note));
+    });
+
+    // circle — Waterfire basin area
+    L.circle([41.8215, -71.4120], {
+      color: '#b34a00',
+      fillColor: '#e07030',
+      fillOpacity: 0.15,
+      radius: 120
+    }).addTo(map)
+      .bindPopup(makePopup("WaterFire Basin", "ritual fire on the river, 8pm friday sometimes"));
+
+    // polygon — roughly College Hill
+    L.polygon([
+      [41.8310, -71.4050],
+      [41.8295, -71.3960],
+      [41.8220, -71.3990],
+      [41.8235, -71.4070]
+    ], {
+      color: '#3a3a6a',
+      fillColor: '#5a5aaa',
+      fillOpacity: 0.10,
+      weight: 1.5,
+      dashArray: '6 4'
+    }).addTo(map)
+      .bindPopup(makePopup("College Hill", "where we live now apparently"));
+  </script>
+</body>
+</html>
